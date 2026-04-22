@@ -1,28 +1,28 @@
-# ─────────────────────────────────────────────────────────────────────────────
-# docker-compose.yml
-#
-# CE FICHIER EST VOLONTAIREMENT INCOMPLET.
-# Votre mission : définir les 3 services qui composent l'application.
-#
-# Services attendus :
-#
-#   mongo    → image officielle mongo:7
-#              port 27017 exposé
-#              volume persistant pour les données
-#
-#   backend  → build depuis ./backend
-#              port 8000 exposé
-#              variables d'environnement : MONGO_URL, SECRET_KEY
-#              dépend de : mongo
-#
-#   frontend → build depuis ./frontend
-#              port 80 exposé
-#              dépend de : backend
-#
-#   Indice : 
-#     vous aurez besoin d'un volume pour Mongo, mais pas pour les autres services.
-#     vous aurez aussi besoin de la directive "depends_on" pour gérer l'ordre de démarrage des services.
-#
-# Rappel : les variables sensibles (SECRET_KEY) ne doivent pas être
-# écrites en dur ici — utilisez un fichier .env (voir .env.example)
-# ─────────────────────────────────────────────────────────────────────────────
+services:
+
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGO_URL=${MONGO_URL}
+      - SECRET_KEY=${SECRET_KEY}
+    depends_on:
+      - mongo
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:
