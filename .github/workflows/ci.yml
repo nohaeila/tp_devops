@@ -22,6 +22,7 @@ jobs:
         run: |
           cd backend
           pip install -r requirements.txt
+          pip install pytest
 
       - name: Run backend tests
         run: |
@@ -73,3 +74,5 @@ jobs:
 
       - name: Push frontend image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/frontend
+
+
